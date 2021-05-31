@@ -3,15 +3,15 @@ package airport.server.converter;
 import airport.server.dto.CityReviewDTO;
 import airport.server.model.City;
 import airport.server.model.CityReview;
-import airport.server.repository.CityCommentRepository;
 import airport.server.repository.CityRepository;
+import airport.server.repository.CityReviewRepository;
+import airport.server.util.DateUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -21,11 +21,11 @@ import java.util.stream.Collectors;
 public class CityReviewConverter {
 
     private CityRepository cityRepository;
-    private CityCommentRepository cityCommentRepository;
+    private CityReviewRepository cityReviewRepository;
 
-    public CityReviewConverter(CityRepository cityRepository, CityCommentRepository cityCommentRepository) {
+    public CityReviewConverter(CityRepository cityRepository, CityReviewRepository cityReviewRepository) {
         this.cityRepository = cityRepository;
-        this.cityCommentRepository = cityCommentRepository;
+        this.cityReviewRepository = cityReviewRepository;
     }
 
     public CityReview convertReviewDTOToReview(CityReviewDTO reviewDto) {
@@ -39,26 +39,18 @@ public class CityReviewConverter {
         Long commentId = reviewDto.getReviewId();
         CityReview review;
 
-        Function<CityReview, Void> setCommonData = new Function<CityReview, Void>() {
-            @Override
-            public Void apply(CityReview cityReview) {
-                cityReview.setDescription(reviewDto.getReviewContent());
-                cityReview.setCity(cityOptional.get());
-                return null;
-            }
-        };
-
         if (commentId != null) {
-            Optional<CityReview> reviewOptional = cityCommentRepository.findById(commentId);
+            Optional<CityReview> reviewOptional = cityReviewRepository.findById(commentId);
             //is there in city review with this reviewId
             if (reviewOptional == null || reviewOptional.isEmpty()) {
                 return null;
             }
             review = reviewOptional.get();
+            review.setUpdated(DateUtil.convertToLocalDateTimeNow());
         } else {
             review = new CityReview();
         }
-        review.setCity(cityOptional.get());
+        review.setCityId(cityOptional.get().getId());
         review.setDescription(reviewDto.getReviewContent());
         return review;
     }
@@ -70,7 +62,7 @@ public class CityReviewConverter {
         CityReviewDTO reviewDto = new CityReviewDTO();
         reviewDto.setReviewId(review.getId());
         reviewDto.setReviewContent(review.getDescription());
-        reviewDto.setCityId(review.getCity().getId());
+        reviewDto.setCityId(review.getCityId());
         return reviewDto;
     }
 

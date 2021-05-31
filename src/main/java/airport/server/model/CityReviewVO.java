@@ -13,7 +13,7 @@ public class CityReviewVO {
     private String reviewContent;
 
     public CityReviewVO(CityReview review) {
-        this.cityId = review.getCity().getId();
+        this.cityId = review.getId();
         this.reviewId = review.getId();
         this.reviewContent = review.getDescription();
     }

@@ -26,9 +26,8 @@ public class CityReview {
     /**
      * City.
      */
-    @ManyToOne
-    @JoinColumn(name = "city_id")
-    private City city = new City();
+    @Column
+    private Long cityId;
 
     /**
      * City description.

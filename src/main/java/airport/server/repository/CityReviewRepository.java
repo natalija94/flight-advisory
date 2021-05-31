@@ -13,8 +13,8 @@ import java.util.List;
  * @author natalija
  */
 @Repository
-public interface CityCommentRepository extends JpaRepository<CityReview, Long> {
-    //save/update/delete
+public interface CityReviewRepository extends JpaRepository<CityReview, Long> {
+    //save/update/delete    +  ->
 
     @Query("select new airport.server.model.CityReviewVO(c) from CityReview c")
     List<CityReviewVO> findAllReviews();
@@ -22,9 +22,13 @@ public interface CityCommentRepository extends JpaRepository<CityReview, Long> {
     @Query("select new airport.server.model.CityReviewVO(c) from CityReview c")
     List<CityReviewVO> findAllReviewsPaginated(Pageable pageable);
 
-    @Query("select new airport.server.model.CityReviewVO(c) from CityReview c where c.city.name = :name")
+    @Query("select new airport.server.model.CityReviewVO(cityReview) from CityReview cityReview " +
+            "join City city on cityReview.cityId = city.id " +
+            "where city.name = :name")
     List<CityReviewVO> findAllReviewsByName(String name);
 
-    @Query("select new airport.server.model.CityReviewVO(c) from CityReview c where c.city.name = :name")
+    @Query("select new airport.server.model.CityReviewVO(cityReview) from CityReview cityReview " +
+            "join City city on cityReview.cityId = city.id " +
+            "where city.name = :name ")
     List<CityReviewVO> findAllReviewsByNamePaginated(String name, Pageable pageable);
 }

@@ -5,7 +5,7 @@ import airport.server.dto.CheapestFlightParamsDTO;
 import airport.server.dto.CityReviewDTO;
 import airport.server.dto.ResultDTO;
 import airport.server.enums.ResponseStatus;
-import airport.server.repository.CityCommentRepository;
+import airport.server.repository.CityReviewRepository;
 import airport.server.service.CityReviewService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -21,11 +21,11 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class CityReviewServiceImpl implements CityReviewService {
 
-    private CityCommentRepository cityCommentRepository;
+    private CityReviewRepository cityReviewRepository;
     private CityReviewConverter reviewConverter;
 
-    public CityReviewServiceImpl(CityCommentRepository cityCommentRepository, CityReviewConverter reviewConverter) {
-        this.cityCommentRepository = cityCommentRepository;
+    public CityReviewServiceImpl(CityReviewRepository cityReviewRepository, CityReviewConverter reviewConverter) {
+        this.cityReviewRepository = cityReviewRepository;
         this.reviewConverter = reviewConverter;
     }
 
@@ -43,31 +43,31 @@ public class CityReviewServiceImpl implements CityReviewService {
     }
 
     @Override
-    public ResultDTO getAllComments() {
-        return handleResultDTO(() -> cityCommentRepository.findAllReviews());
+    public ResultDTO getAllReviews() {
+        return handleResultDTO(() -> cityReviewRepository.findAllReviews());
     }
 
     @Override
-    public ResultDTO getAllCommentsLatestResults(int numberOfResults) {
+    public ResultDTO getAllReviewsLatestResults(int numberOfResults) {
         Pageable pageable = PageRequest.of(0, numberOfResults, Sort.Direction.ASC, "id");
-        return handleResultDTO(() -> cityCommentRepository.findAllReviewsPaginated(pageable));
+        return handleResultDTO(() -> cityReviewRepository.findAllReviewsPaginated(pageable));
     }
 
     @Override
-    public ResultDTO getAllComments(String cityName) {
-        return handleResultDTO(() -> cityCommentRepository.findAllReviewsByName(cityName));
+    public ResultDTO getAllReviews(String cityName) {
+        return handleResultDTO(() -> cityReviewRepository.findAllReviewsByName(cityName));
     }
 
     @Override
-    public ResultDTO getAllCommentsLatestResults(String cityName, int numberOfComments) {
-        Pageable pageable = PageRequest.of(0, numberOfComments, Sort.Direction.ASC, "id");
-        return handleResultDTO(() -> cityCommentRepository.findAllReviewsByNamePaginated(cityName, pageable));
+    public ResultDTO getAllReviewsLatestResults(String cityName, int numberOfComments) {
+        Pageable pageable = PageRequest.of(0, numberOfComments, Sort.Direction.DESC, "id");
+        return handleResultDTO(() -> cityReviewRepository.findAllReviewsByNamePaginated(cityName, pageable));
     }
 
     private ResultDTO saveUpdateComment(CityReviewDTO reviewDto) {
         ResultDTO resultDTO = new ResultDTO();
         try {
-            cityCommentRepository.save(reviewConverter.convertReviewDTOToReview(reviewDto));
+            cityReviewRepository.save(reviewConverter.convertReviewDTOToReview(reviewDto));
             resultDTO.setResponseStatus(ResponseStatus.SUCCESS);
         } catch (Exception e) {
             log.error("Not possible to apply changes to entity: {}. Error: ", reviewDto, e.getMessage());
@@ -78,25 +78,25 @@ public class CityReviewServiceImpl implements CityReviewService {
     }
 
     @Override
-    public ResultDTO addComment(CityReviewDTO reviewDto) {
+    public ResultDTO addReview(CityReviewDTO reviewDto) {
         return saveUpdateComment(reviewDto);
     }
 
     @Override
-    public ResultDTO updateComment(CityReviewDTO reviewDto) {
+    public ResultDTO updateReview(CityReviewDTO reviewDto) {
         return saveUpdateComment(reviewDto);
     }
 
     @Override
-    public ResultDTO deleteComment(CityReviewDTO reviewDto) {
+    public ResultDTO deleteComment(Long reviewId) {
         ResultDTO resultDTO = new ResultDTO();
         try {
-            cityCommentRepository.delete(reviewConverter.convertReviewDTOToReview(reviewDto));
+            cityReviewRepository.deleteById(reviewId);
             resultDTO.setResponseStatus(ResponseStatus.SUCCESS);
         } catch (Exception e) {
             resultDTO.setResponseStatus(ResponseStatus.ERROR);
-            resultDTO.setErrorMessage(StringUtils.join("Not possible to delete entity: {}. Error: ", reviewDto, e.getMessage()));
-            log.error("Not possible to delete entity: {}. Error: ", reviewDto, e.getMessage());
+            resultDTO.setErrorMessage(StringUtils.join("Not possible to delete entity: {}. Error: ", reviewId, e.getMessage()));
+            log.error("Not possible to delete entity: {}. Error: ", reviewId, e.getMessage());
         }
         return resultDTO;
     }
