@@ -26,7 +26,6 @@ public class CityReview {
     /**
      * City.
      */
-    @Column
     @ManyToOne
     @JoinColumn(name = "city_id")
     private City city = new City();
