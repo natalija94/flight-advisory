@@ -4,7 +4,6 @@ import airport.server.model.Route;
 import org.assertj.core.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.util.ArrayUtils;
 
 import java.math.BigDecimal;
 

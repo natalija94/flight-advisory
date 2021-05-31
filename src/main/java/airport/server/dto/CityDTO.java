@@ -12,7 +12,6 @@ public class CityDTO implements Serializable {
     private Long id;
     private String name;
     private CountryDTO countryDTO;
-    private String comment;
 
     private String description;
 }
