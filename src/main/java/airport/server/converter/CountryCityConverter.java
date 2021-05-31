@@ -49,7 +49,7 @@ public class CountryCityConverter {
     }
 
     public CityDTO assembleCityDTOFromCity(City city) {
-        if (city != null && city.getCountry() != null) {
+        if (city != null && city.getCountryId() != null) {
             CityDTO cityDTO = new CityDTO();
             cityDTO.setId(city.getId());
             cityDTO.setName(city.getName());
@@ -63,11 +63,11 @@ public class CountryCityConverter {
         City city = null;
         if (cityDTO != null && cityDTO.getCountryDTO() != null && cityDTO.getCountryDTO().getId() != null) {
             Optional<Country> country = countryRepository.findById(cityDTO.getCountryDTO().getId());
-            if (country != null && country.get() != null) {
+            if (country != null && !country.isEmpty()) {
                 city = new City();
                 city.setId(cityDTO.getId());
                 city.setName(cityDTO.getName());
-                city.setCountry(country.get());
+                city.setCountryId(country.get().getId());
             } else {
                 throw new ParentEntityNotValid();
             }

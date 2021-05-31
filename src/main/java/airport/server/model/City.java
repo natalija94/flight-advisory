@@ -23,9 +23,8 @@ public class City {
     /**
      * Country name.
      */
-    @ManyToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name ="country_id")
-    private Country country;
+    @Column
+    private Long countryId;
 
     /**
      * City name.

@@ -41,7 +41,6 @@ public class AirportDictEntryBuilderFromCSV {
         if (StringUtils.isNotEmpty(cityName) && country != null) {
             City city = new City();
             city.setName(cityName);
-            city.setCountry(country);
             return city;
         }
         return null;
@@ -63,7 +62,7 @@ public class AirportDictEntryBuilderFromCSV {
             airport = new Airport();
             airport.setAirportId(Long.parseLong(airportId));
             airport.setName(csvRow[1]);
-            airport.setCity(city);
+            airport.setCityId(city.getId());
 
             airport.setIataCode(csvRow[4]);
             airport.setIcaoCode(csvRow[5]);

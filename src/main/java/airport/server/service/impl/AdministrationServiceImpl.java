@@ -72,27 +72,34 @@ public class AdministrationServiceImpl implements AdministrationService {
     public void importAirports() throws Exception {
         List<String[]> airports = dictionaryService.parseDictionary(DictionaryType.AIRPORTS);
         for (String[] airportROW : airports) {
-            Airport airport = AirportDictEntryBuilderFromCSV.buildAirport(airportROW);
-            if (airport != null && airport.getCity() != null && airport.getCity().getCountry() != null) {
-                City cityFromDict = airport.getCity();
-                Country country = cityFromDict.getCountry();
+            Airport airportCSV = AirportDictEntryBuilderFromCSV.buildAirport(airportROW);
+            Country countryCSV = AirportDictEntryBuilderFromCSV.buildCountry(airportROW);
+            City cityFromDictCSV = AirportDictEntryBuilderFromCSV.buildCity(airportROW);
 
-                country = countryRepository.findFirstByName(country.getName()) != null ?
-                        countryRepository.findFirstByName(country.getName()) : country;
+            if (cityFromDictCSV == null || countryCSV == null) {
+                continue;
+            }
+
+            if (airportCSV != null && airportCSV.getAirportId() != null) {
+                //take from DB of exists
+                countryCSV = countryRepository.findFirstByName(countryCSV.getName()) != null ?
+                        countryRepository.findFirstByName(countryCSV.getName()) : countryCSV;
+                cityFromDictCSV = cityRepository.findFirstByName(countryCSV.getName()) != null ?
+                        cityRepository.findFirstByName(countryCSV.getName()) : cityFromDictCSV;
 
                 try {
-                    if (countryRepository.findFirstByName(country.getName()) == null) {
-                        countryRepository.save(country);
+                    if (countryCSV.getId() == null) {
+                        countryCSV= countryRepository.save(countryCSV);
                     }
 
-                    if (cityRepository.findFirstByName(cityFromDict.getName()) == null) {
-                        cityFromDict.setCountry(country);
-                        cityRepository.save(cityFromDict);
+                    if (cityFromDictCSV.getId() == null) {
+                        cityFromDictCSV.setCountryId(countryCSV.getId());
+                        cityFromDictCSV = cityRepository.save(cityFromDictCSV);
                     }
-
-                    airportRepository.save(airport);
+                    airportCSV.setCityId(cityFromDictCSV.getId());
+                    airportRepository.save(airportCSV);
                 } catch (Exception e) {
-                    log.error("Airport: {}", airport);
+                    log.error("Airport: {}", airportCSV);
                     //probably you will get some errors with sequence; which is strange while
                     log.error("Error occurred while saving to DB. {}", e.getMessage());
                 }

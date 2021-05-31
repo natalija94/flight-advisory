@@ -27,9 +27,8 @@ public class Airport {
     @Column(nullable = false)
     private String name;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name ="country_id")
-    private City city;
+    @Column
+    private Long cityId;
 
     @Column(length = 3)
     private String iataCode;
