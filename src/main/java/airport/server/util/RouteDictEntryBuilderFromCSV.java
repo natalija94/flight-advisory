@@ -1,6 +1,7 @@
 package airport.server.util;
 
 import airport.server.model.Route;
+import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +34,7 @@ public class RouteDictEntryBuilderFromCSV {
             return null;
         }
 
-        route.setCodeShare(csvRow[6]);
+        route.setCodeShare(StringUtils.isNotEmpty(csvRow[6]) ? csvRow[6] : "NO");
         try {
             route.setStops(Integer.parseInt(csvRow[7]));
         } catch (Exception e) {

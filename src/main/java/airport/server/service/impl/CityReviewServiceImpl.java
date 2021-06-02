@@ -1,12 +1,12 @@
 package airport.server.service.impl;
 
 import airport.server.converter.CityReviewConverter;
-import airport.server.dto.CheapestFlightParamsDTO;
 import airport.server.dto.CityReviewDTO;
 import airport.server.dto.ResultDTO;
 import airport.server.enums.ResponseStatus;
 import airport.server.repository.CityReviewRepository;
 import airport.server.service.CityReviewService;
+import airport.server.service.RouteService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.PageRequest;
@@ -23,10 +23,12 @@ public class CityReviewServiceImpl implements CityReviewService {
 
     private CityReviewRepository cityReviewRepository;
     private CityReviewConverter reviewConverter;
+    private RouteService routeService;
 
-    public CityReviewServiceImpl(CityReviewRepository cityReviewRepository, CityReviewConverter reviewConverter) {
+    public CityReviewServiceImpl(CityReviewRepository cityReviewRepository, CityReviewConverter reviewConverter, RouteService routeService) {
         this.cityReviewRepository = cityReviewRepository;
         this.reviewConverter = reviewConverter;
+        this.routeService = routeService;
     }
 
     private ResultDTO handleResultDTO(CityReviewCallBack reviewCallBack) {
@@ -102,8 +104,8 @@ public class CityReviewServiceImpl implements CityReviewService {
     }
 
     @Override
-    public ResultDTO findTheCheapestFlight(CheapestFlightParamsDTO flightParamsDTO) {
-        return null;
+    public ResultDTO findTheCheapestFlight(Long cityIdSource, Long cityIdDest) {
+        return routeService.getCheapestRouteDetails(cityIdSource, cityIdDest);
     }
 
     //avoid code repetition of the same Result DTO logic

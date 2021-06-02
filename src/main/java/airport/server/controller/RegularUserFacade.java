@@ -49,5 +49,12 @@ public class RegularUserFacade {
     }
 
 
-
+    //returns all posible routes and also an information about the cheapest one
+    //you can try with quick search cityIdSource=7072 & cityIdDest=7071    and vice versa:)))
+    //some more popular destination would take more time for returning results
+    @GetMapping("/cheapest-flight")
+    public ResultDTO findCheapestFlight(@RequestParam("cityIdSource") Long cityIdSource,
+                                        @RequestParam("cityIdDest") Long cityIdDest) {
+        return cityReviewService.findTheCheapestFlight(cityIdSource, cityIdDest);
+    }
 }

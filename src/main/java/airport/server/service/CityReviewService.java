@@ -1,6 +1,5 @@
 package airport.server.service;
 
-import airport.server.dto.CheapestFlightParamsDTO;
 import airport.server.dto.CityReviewDTO;
 import airport.server.dto.ResultDTO;
 
@@ -17,5 +16,5 @@ public interface CityReviewService {
     ResultDTO updateReview(CityReviewDTO reviewDto);
     ResultDTO deleteComment(Long reviewId);
 
-    ResultDTO findTheCheapestFlight(CheapestFlightParamsDTO flightParamsDTO);
+    ResultDTO findTheCheapestFlight(Long cityIdSource, Long cityIdDest);
 }
