@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Slf4j
 @RequestMapping("/administrator")
-@Api("Administrator permission")
+@Api(tags = "Administrator permission")
 public class AdministratorFacade {
 
     private AdministrationService service;
@@ -37,6 +37,6 @@ public class AdministratorFacade {
 
     @GetMapping("/info")
     public String info(){
-        return "I N FO ";
+        return "TEST ";
     }
 }

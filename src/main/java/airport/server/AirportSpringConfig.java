@@ -43,8 +43,8 @@ public class AirportSpringConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/administrator", "/administrator/**").permitAll()
-                .antMatchers("/reviews").authenticated()
+                .antMatchers("/administrator", "/administrator/**").hasAnyRole("ADMIN", "ROLE_ADMIN")
+                .antMatchers("/reviews","/reviews/**").hasAnyRole("USER", "ROLE_USER")
                 .antMatchers("/").permitAll()
                 .and().formLogin().permitAll();
         //it wasn't possible to handle post request without these lines; swagger always returned: 403

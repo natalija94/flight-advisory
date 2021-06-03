@@ -67,10 +67,11 @@ public class CountryCityConverter {
         City city = null;
         if (cityDTO != null && cityDTO.getCountryDTO() != null && cityDTO.getCountryDTO().getId() != null) {
             Optional<Country> country = countryRepository.findById(cityDTO.getCountryDTO().getId());
-            if (country != null && !country.isEmpty()) {
+            if (country.isPresent()) {
                 city = new City();
                 city.setId(cityDTO.getId());
                 city.setName(cityDTO.getName());
+                city.setDescription(cityDTO.getDescription());
                 city.setCountryId(country.get().getId());
             } else {
                 throw new ParentEntityNotValid();

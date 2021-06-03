@@ -10,7 +10,6 @@ import airport.server.service.RouteService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -93,8 +92,7 @@ public class RouteServiceImpl implements RouteService {
     }
 
     /**
-     *
-     * @param sourceId as start city
+     * @param sourceId           as start city
      * @param finalDestinationId
      * @return
      */
@@ -109,7 +107,8 @@ public class RouteServiceImpl implements RouteService {
 
     /**
      * Finds the cheapest route from one city to another as result dto.
-     * @param sourceId as start city
+     *
+     * @param sourceId           as start city
      * @param finalDestinationId as  destination city
      * @return the cheapest route with other routes details.
      */
@@ -140,11 +139,12 @@ public class RouteServiceImpl implements RouteService {
 
     /**
      * Finds the cheapest route from all routes.
+     *
      * @param routes all possible routes built of flights
      * @return the cheapest route details.
      */
     public Path findCheapestRoute(List<Path> routes) {
-        if(CollectionUtils.isNotEmpty(routes)) {
+        if (CollectionUtils.isNotEmpty(routes)) {
             Path cheapest = routes.get(0);
 
             for (Path flightVO : routes) {
@@ -158,7 +158,6 @@ public class RouteServiceImpl implements RouteService {
 
     /**
      * Helper class. Handles routes from one to another city, contains all stop points for the route.
-     *
      */
     @Data
     public static class Path implements Serializable {
@@ -167,6 +166,7 @@ public class RouteServiceImpl implements RouteService {
 
         /**
          * Create object copy.
+         *
          * @param p current path details.
          * @return deep copy.
          */
@@ -182,6 +182,7 @@ public class RouteServiceImpl implements RouteService {
 
         /**
          * Constructor.
+         *
          * @param stopPoints as flights.
          */
         public Path(List<FlightVO> stopPoints) {
@@ -200,6 +201,7 @@ public class RouteServiceImpl implements RouteService {
 
         /**
          * Adds new route.
+         *
          * @param flightVO as Flight from one to another airport.
          */
         public void addStopPoint(FlightVO flightVO) {
@@ -212,6 +214,7 @@ public class RouteServiceImpl implements RouteService {
 
         /**
          * Checks whether the city is already visited.
+         *
          * @param cityId
          * @return visited/not visited.
          */
@@ -219,11 +222,10 @@ public class RouteServiceImpl implements RouteService {
             Optional<FlightVO> sourceStream = stopPoints.stream().filter(point -> cityId == point.getCitySourceId()).findAny();
             Optional<FlightVO> destStream = stopPoints.stream().filter(point -> cityId == point.getCityDestId()).findAny();
 
-            if (sourceStream != null && destStream != null) {
-                Predicate check = o -> o != null && ((Optional<Object>) o).isPresent();
-                return check.evaluate(sourceStream) || check.evaluate(destStream);
-            }
-            return false;
+//            Predicate check = o -> ((Optional<Object>) o).isPresent();
+//            return check.evaluate(sourceStream) || check.evaluate(destStream);
+
+            return sourceStream.isPresent() || destStream.isPresent();
         }
 
     }

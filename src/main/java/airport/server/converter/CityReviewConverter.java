@@ -37,7 +37,7 @@ public class CityReviewConverter {
             return null;
         }
         Optional<City> cityOptional = cityRepository.findById(reviewDto.getCityId());
-        if (cityOptional == null || cityOptional.isEmpty()) {
+        if (!cityOptional.isPresent()) {
             return null;
         }
         Long commentId = reviewDto.getReviewId();
@@ -46,7 +46,7 @@ public class CityReviewConverter {
         if (commentId != null) {
             Optional<CityReview> reviewOptional = cityReviewRepository.findById(commentId);
             //is there in city review with this reviewId
-            if (reviewOptional == null || reviewOptional.isEmpty()) {
+            if (!reviewOptional.isPresent()) {
                 return null;
             }
             review = reviewOptional.get();

@@ -89,7 +89,7 @@ public class AdministrationServiceImpl implements AdministrationService {
 
                 try {
                     if (countryCSV.getId() == null) {
-                        countryCSV= countryRepository.save(countryCSV);
+                        countryCSV = countryRepository.save(countryCSV);
                     }
 
                     if (cityFromDictCSV.getId() == null) {
@@ -121,8 +121,7 @@ public class AdministrationServiceImpl implements AdministrationService {
                 Optional<Airport> airport = airportRepository.findById(sourceIdAirport);
                 Optional<Airport> airport2 = airportRepository.findById(destIdAirport);
 
-                if (airport == null || airport.isEmpty() ||
-                        airport2 == null || airport2.isEmpty()) {
+                if (!airport.isPresent() || !airport2.isPresent()) {
                     log.error("Route: {} will not be added while no appropriate airport or city can be found in the database.", routeRow);
                     continue;
                 }
