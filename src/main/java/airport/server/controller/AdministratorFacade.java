@@ -3,12 +3,10 @@ package airport.server.controller;
 import airport.server.dto.CityDTO;
 import airport.server.dto.ResultDTO;
 import airport.server.service.AdministrationService;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author natalija
@@ -16,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Slf4j
 @RequestMapping("/administrator")
+@Api("Administrator permission")
 public class AdministratorFacade {
 
     private AdministrationService service;
@@ -33,5 +32,11 @@ public class AdministratorFacade {
     @PostMapping("/init-dictionaries")
     public ResultDTO initDictionaries() {
         return service.importDependentDictionaries();
+    }
+
+
+    @GetMapping("/info")
+    public String info(){
+        return "I N FO ";
     }
 }

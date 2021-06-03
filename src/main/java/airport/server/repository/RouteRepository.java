@@ -13,13 +13,13 @@ import java.util.List;
  */
 @Repository
 public interface RouteRepository extends CrudRepository<Route, Long> {
-    @Query("select route from Route route " +
-            "where route.airportSourceId = :sourceId and " +
-            "route.airportSourceId = :destinationId")
-    Route findRoutesByFlight(Long sourceId, Long destinationId);
-
-    List<Route> findRoutesByAirportSourceId(Long sourceId);
-
+    /**
+     * Returns all routes where one airport is start any airport is destination.
+     * Made in order to handle connections between airports / stop points.
+     *
+     * @param sourceCityId source airport
+     * @return route
+     */
     @Query("select new airport.server.model.FlightVO(route, airportSource, airportDest, citySource, cityDest) from Route route " +
             " JOIN Airport  airportSource on route.airportSourceId = airportSource.id" +
             " JOIN Airport  airportDest on route.airportDestinationId = airportDest.id " +

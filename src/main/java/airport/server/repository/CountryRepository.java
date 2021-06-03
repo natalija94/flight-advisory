@@ -9,5 +9,10 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface CountryRepository extends CrudRepository<Country, Long> {
+    /**
+     * Returns country according to its name.
+     * @param name as name of the country
+     * @return concrete country.
+     */
     Country findFirstByName(String name);
 }

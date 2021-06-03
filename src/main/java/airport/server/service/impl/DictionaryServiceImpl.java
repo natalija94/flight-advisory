@@ -56,11 +56,21 @@ public class DictionaryServiceImpl implements DictionaryService, DictionaryReade
         return null;
     }
 
+    /**
+     * Parses concrete dictionary.
+     * @param dictionaryType as tye of dictionary
+     * @return list of lines from file.
+     */
     public List<String[]> parseDictionary(DictionaryType dictionaryType) {
         InputStream inputStream = getDictionaryStream(dictionaryType);
         return parseDictionary(inputStream);
     }
 
+    /**
+     * Resolves route from dictionary type
+     * @param dictionaryType
+     * @return route
+     */
     public String resolveRoute(DictionaryType dictionaryType) {
         switch (dictionaryType) {
             case ROUTES:
@@ -72,6 +82,12 @@ public class DictionaryServiceImpl implements DictionaryService, DictionaryReade
         }
     }
 
+    /**
+     * Takes dictionary from file system or from project.
+     * @param path concrete path.
+     * @return Input stream
+     * @throws Exception
+     */
     public InputStream findDictionary(String path) throws Exception {
         if (dictionariesFromFileSystem) {
             return getDictionaryStreamFromFileSystem(path);

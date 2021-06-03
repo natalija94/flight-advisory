@@ -123,7 +123,7 @@ public class AdministrationServiceImpl implements AdministrationService {
 
                 if (airport == null || airport.isEmpty() ||
                         airport2 == null || airport2.isEmpty()) {
-                    log.error("Route: {} will not be added while no appropriate airport or city can be found in the database.");
+                    log.error("Route: {} will not be added while no appropriate airport or city can be found in the database.", routeRow);
                     continue;
                 }
 

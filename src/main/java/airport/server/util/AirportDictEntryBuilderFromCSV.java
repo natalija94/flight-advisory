@@ -19,6 +19,12 @@ public class AirportDictEntryBuilderFromCSV {
     }
     private static Logger LOG = LoggerFactory.getLogger(AirportDictEntryBuilderFromCSV.class);
 
+    /**
+     * Build country DB object from csw row from dictionary.
+     * @param csvRow as row from file.
+     * @return country.
+     */
+
     public static Country buildCountry(String[] csvRow) {
         if (Arrays.isNullOrEmpty(csvRow)) {
             return null;
@@ -32,6 +38,11 @@ public class AirportDictEntryBuilderFromCSV {
         return null;
     }
 
+    /**
+     * Build city DB object from csw row from dictionary.
+     * @param csvRow as
+     * @return City.
+     */
     public static City buildCity(String[] csvRow) {
         if (Arrays.isNullOrEmpty(csvRow)) {
             return null;
@@ -46,6 +57,11 @@ public class AirportDictEntryBuilderFromCSV {
         return null;
     }
 
+    /**
+     * Build Airport DB object from csw row from dictionary.
+     * @param csvRow as
+     * @return Airport.
+     */
     public static Airport buildAirport(String[] csvRow) {
         if (Arrays.isNullOrEmpty(csvRow)) {
             return null;

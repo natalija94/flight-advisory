@@ -14,6 +14,10 @@ import java.util.Optional;
 /**
  * @author natalija
  */
+
+/**
+ * Converts City and country DTOs to DB objects, and vice versa.
+ */
 @Service
 public class CountryCityConverter {
 

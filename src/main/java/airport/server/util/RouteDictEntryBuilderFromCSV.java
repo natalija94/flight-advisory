@@ -17,6 +17,11 @@ public class RouteDictEntryBuilderFromCSV {
 
     private static Logger LOG = LoggerFactory.getLogger(AirportDictEntryBuilderFromCSV.class);
 
+    /**
+     * Build Route DB object from csw row from dictionary.
+     * @param csvRow as
+     * @return Route.
+     */
     public static Route buildFlightRoute(String[] csvRow) {
         if (Arrays.isNullOrEmpty(csvRow)) {
             return null;

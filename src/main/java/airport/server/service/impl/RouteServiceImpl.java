@@ -92,6 +92,12 @@ public class RouteServiceImpl implements RouteService {
         }
     }
 
+    /**
+     *
+     * @param sourceId as start city
+     * @param finalDestinationId
+     * @return
+     */
     @Override
     public List<Path> getAvailableRoutesForSourceCity(Long sourceId, Long finalDestinationId) {
         List<Path> result = new ArrayList<>();
@@ -101,6 +107,12 @@ public class RouteServiceImpl implements RouteService {
         return result;
     }
 
+    /**
+     * Finds the cheapest route from one city to another as result dto.
+     * @param sourceId as start city
+     * @param finalDestinationId as  destination city
+     * @return the cheapest route with other routes details.
+     */
     @Override
     public ResultDTO getCheapestRouteDetails(Long sourceId, Long finalDestinationId) {
         ResultDTO resultDTO = new ResultDTO();
@@ -109,7 +121,9 @@ public class RouteServiceImpl implements RouteService {
             FlightReviewDTO reviewDTO = new FlightReviewDTO();
             if (CollectionUtils.isNotEmpty(routes)) {
                 reviewDTO.setAllPossibleRoutes(routes);
-                reviewDTO.setCheapestRoute(findCheapestRoute(routes));
+                Path cheapestRoute = findCheapestRoute(routes);
+                reviewDTO.setCheapestRoute(cheapestRoute.getStopPoints());
+                reviewDTO.setCheapestAmount(cheapestRoute.getTotalPrice());
                 resultDTO.setResponseStatus(ResponseStatus.SUCCESS);
                 resultDTO.setData(reviewDTO);
             } else {
@@ -124,24 +138,38 @@ public class RouteServiceImpl implements RouteService {
         return resultDTO;
     }
 
-    public List<FlightVO> findCheapestRoute(List<Path> routes) {
+    /**
+     * Finds the cheapest route from all routes.
+     * @param routes all possible routes built of flights
+     * @return the cheapest route details.
+     */
+    public Path findCheapestRoute(List<Path> routes) {
         if(CollectionUtils.isNotEmpty(routes)) {
             Path cheapest = routes.get(0);
 
             for (Path flightVO : routes) {
                 cheapest = cheapest.totalPrice.compareTo(flightVO.totalPrice) > 0 ? flightVO : cheapest;
             }
-            return cheapest.getStopPoints();
+            return cheapest;
         }
-        return new ArrayList<>();
+        return new Path();
     }
 
 
+    /**
+     * Helper class. Handles routes from one to another city, contains all stop points for the route.
+     *
+     */
     @Data
     public static class Path implements Serializable {
         public Path() {
         }
 
+        /**
+         * Create object copy.
+         * @param p current path details.
+         * @return deep copy.
+         */
         public static Path prepareCopy(Path p) {
             Path pathCopy = new Path();
             if (CollectionUtils.isNotEmpty(p.stopPoints)) {
@@ -152,14 +180,28 @@ public class RouteServiceImpl implements RouteService {
             return pathCopy;
         }
 
+        /**
+         * Constructor.
+         * @param stopPoints as flights.
+         */
         public Path(List<FlightVO> stopPoints) {
             this.stopPoints = stopPoints;
         }
 
+        /**
+         * All routes. Built from : start - end nodes.
+         */
         private List<FlightVO> stopPoints = new ArrayList<>();
 
+        /**
+         * Total price of the flight.
+         */
         private BigDecimal totalPrice = new BigDecimal(0);
 
+        /**
+         * Adds new route.
+         * @param flightVO as Flight from one to another airport.
+         */
         public void addStopPoint(FlightVO flightVO) {
             if (!stopPoints.contains(flightVO)) {
                 stopPoints.add(flightVO);
@@ -168,6 +210,11 @@ public class RouteServiceImpl implements RouteService {
             }
         }
 
+        /**
+         * Checks whether the city is already visited.
+         * @param cityId
+         * @return visited/not visited.
+         */
         public boolean cityVisited(Long cityId) {
             Optional<FlightVO> sourceStream = stopPoints.stream().filter(point -> cityId == point.getCitySourceId()).findAny();
             Optional<FlightVO> destStream = stopPoints.stream().filter(point -> cityId == point.getCityDestId()).findAny();

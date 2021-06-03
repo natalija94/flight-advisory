@@ -9,5 +9,10 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface  CityRepository extends CrudRepository<City, Long>  {
+    /**
+     * Finds first found city from the DB.
+     * @param name as city name
+     * @return concrete city.
+     */
     City findFirstByName(String name);
 }
